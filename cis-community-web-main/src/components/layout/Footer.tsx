@@ -83,7 +83,7 @@ export default function Footer() {
               <IconBrandInstagram className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </a>
             <a
-              href="https://www.facebook.com/profile.php?id=61577627304848"
+              href="https://www.facebook.com/people/CIS-Community-NED/61577627304848"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2.5 bg-white/5 rounded-full hover:bg-[#1877F2] hover:text-white text-slate-400 transition-all duration-300 group"

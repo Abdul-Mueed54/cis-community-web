@@ -15,6 +15,22 @@ export const Team: CollectionConfig = {
       required: true,
     },
     {
+      name: 'department',
+      type: 'select',
+      required: true,
+      defaultValue: 'executive_board',
+      options: [
+        { label: 'Executive Board', value: 'executive_board' },
+        { label: 'Co-operation & Marketing', value: 'cooperation_marketing' },
+        { label: 'Coding & Innovation', value: 'coding_innovation' },
+        { label: 'Media', value: 'media' },
+        { label: 'Publisher', value: 'publisher' },
+      ],
+      admin: {
+        description: 'Select the department for this team member',
+      }
+    },
+    {
       name: 'role',
       type: 'text',
       required: true,

@@ -80,9 +80,10 @@ export const StaggerContainer = ({
   );
 };
 
-export const StaggerItem = ({ children }: { children: React.ReactNode }) => {
+export const StaggerItem = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
   return (
     <motion.div
+      className={className}
       variants={{
         hidden: { opacity: 0, y: 30 },
         visible: {

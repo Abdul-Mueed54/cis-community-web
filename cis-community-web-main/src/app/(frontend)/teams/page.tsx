@@ -8,6 +8,7 @@ import { TeamCard } from "@/components/ui/TeamCard";
 export default async function TeamsPage() {
   const payload = await getPayload({ config: configPromise });
   const teamReq = await payload.find({
+    // @ts-ignore
     collection: 'team',
     limit: 100,
   });
@@ -36,13 +37,38 @@ export default async function TeamsPage() {
         </FadeIn>
 
         {teamMembers.length > 0 ? (
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8 perspective-1000">
-            {teamMembers.map((member) => (
-              <StaggerItem key={member.id}>
-                <TeamCard member={member} />
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          <div className="space-y-24 pt-8">
+            {[
+              { id: 'executive_board', name: 'Executive Board' },
+              { id: 'cooperation_marketing', name: 'Co-operation & Marketing' },
+              { id: 'coding_innovation', name: 'Coding & Innovation' },
+              { id: 'media', name: 'Media' },
+              { id: 'publisher', name: 'Publisher' },
+            ].map((dept) => {
+              const deptMembers = teamMembers.filter((m: any) => m.department === dept.id);
+              if (deptMembers.length === 0) return null;
+
+              return (
+                <div key={dept.id} className="space-y-12">
+                  <FadeIn>
+                    <div className="flex items-center justify-center gap-6">
+                      <div className="h-px bg-slate-200 flex-1 max-w-[100px]"></div>
+                      <h2 className="text-3xl md:text-4xl font-bold text-slate-800">{dept.name}</h2>
+                      <div className="h-px bg-slate-200 flex-1 max-w-[100px]"></div>
+                    </div>
+                  </FadeIn>
+                  
+                  <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 perspective-1000">
+                    {deptMembers.map((member) => (
+                      <StaggerItem key={member.id}>
+                        <TeamCard member={member} />
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <FadeIn delay={0.4}>
             <div className="mt-12 p-12 bg-white/60 backdrop-blur-xl border border-white rounded-3xl shadow-2xl shadow-slate-200/50">
