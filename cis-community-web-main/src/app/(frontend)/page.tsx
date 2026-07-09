@@ -12,26 +12,47 @@ import {
   IconChevronDown,
   IconClock,
   IconQuote,
-  IconTrophy,
+  IconBriefcase,
   IconCode,
   IconUsers,
   IconBrandGithub
 } from "@tabler/icons-react";
 import { getPayload } from "payload";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/FadeIn";
-import { InfiniteMarquee } from "@/components/ui/InfiniteMarquee";
 import { StickyJoinWidget } from "@/components/ui/StickyJoinWidget";
 
 export default async function HomePage() {
   const payload = await getPayload({ config: configPromise })
 
-  const eventsRequest = await payload.find({
-    collection: 'events',
-    limit: 3,
-    sort: '-createdAt',
-  })
+  let youtubeVideos: Array<{ id: string, title: string, link: string, date: string, thumbnail: string }> = [];
+  try {
+    const res = await fetch('https://www.youtube.com/feeds/videos.xml?channel_id=UC63qtVJAixd8fRihC-OXGVQ', { next: { revalidate: 3600 } });
+    const xml = await res.text();
+    const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)];
+    youtubeVideos = entries.slice(0, 3).map(e => {
+      const entryXml = e[1];
+      const title = entryXml.match(/<title>([^<]+)<\/title>/)?.[1] || 'Video';
+      const link = entryXml.match(/<link rel="alternate" href="([^"]+)"\/>/)?.[1] || '#';
+      const pubDate = entryXml.match(/<published>([^<]+)<\/published>/)?.[1] || '';
+      const thumbnail = entryXml.match(/<media:thumbnail url="([^"]+)"/)?.[1] || '';
+      return { 
+        id: link, 
+        title, 
+        link, 
+        date: pubDate ? new Date(pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '', 
+        thumbnail 
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching YouTube videos:", error);
+  }
 
-  const liveEvents = eventsRequest.docs
+  // @ts-ignore
+  const teamCountReq = await payload.count({ collection: 'team' })
+  // @ts-ignore
+  const eventsCountReq = await payload.count({ collection: 'events' })
+  const membersCount = teamCountReq.totalDocs
+  const totalEvents = eventsCountReq.totalDocs
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-between selection:bg-blue-900 selection:text-white">
@@ -100,10 +121,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* INFINITE MARQUEE */}
-        <InfiniteMarquee />
-
-
+        {/* Removed InfiniteMarquee */}
         {/* ============================================= */}
         {/* 2. BENTO BOX GRID — What we do               */}
         {/* ============================================= */}
@@ -122,7 +140,7 @@ export default async function HomePage() {
                 {/* Background Image */}
                 <Image 
                   src="/hackathon_placeholder.png" 
-                  alt="Hackathon Event" 
+                  alt="Career Growth Event" 
                   fill 
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -131,11 +149,11 @@ export default async function HomePage() {
                 
                 <div className="p-10 h-full flex flex-col justify-end relative z-10">
                   <div className="w-14 h-14 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center mb-6">
-                    <IconTrophy size={28} />
+                    <IconBriefcase size={28} />
                   </div>
-                  <h3 className="text-3xl font-black text-white mb-4">Hackathons & Competitions</h3>
+                  <h3 className="text-3xl font-black text-white mb-4">Mentorship & Career Growth</h3>
                   <p className="text-slate-300 text-lg leading-relaxed max-w-md">
-                    We organize local hackathons and send teams to national competitions like SOFTEC. It's the fastest way to learn how to build real things under pressure.
+                    From CV building to mock interviews, our community prepares you for the professional world. Our seniors and alumni provide guidance to help you easily crack your first internship.
                   </p>
                 </div>
               </FadeIn>
@@ -193,32 +211,33 @@ export default async function HomePage() {
               </div>
             </FadeIn>
 
-            {liveEvents.length > 0 ? (
+            {youtubeVideos.length > 0 ? (
               <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {liveEvents.map((event) => (
-                  <StaggerItem key={event.id}>
-                    <Card className="h-full border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-[2rem] bg-white overflow-hidden group">
-                      <CardHeader className="p-8 pb-4">
-                        <div className="flex items-center gap-2 mb-4">
-                          <Badge className="bg-blue-50 text-blue-700 border-0 font-bold text-xs px-3 py-1 uppercase tracking-wider">
-                            {event.tag}
+                {youtubeVideos.map((video) => (
+                  <StaggerItem key={video.id}>
+                    <Card className="h-full flex flex-col border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-[2rem] bg-white overflow-hidden group">
+                      <div className="relative w-full aspect-video overflow-hidden bg-slate-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={video.thumbnail} alt={video.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                      <CardHeader className="p-6 pb-2">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Badge className="bg-[#FF0000]/10 text-[#FF0000] border-0 font-bold text-xs px-3 py-1 uppercase tracking-wider">
+                            YouTube
                           </Badge>
                         </div>
-                        <CardTitle className="text-2xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors leading-snug">
-                          {event.title}
+                        <CardTitle className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors leading-snug line-clamp-2">
+                          {video.title.replace(/&amp;/g, '&')}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="px-8 pb-4">
-                        <p className="text-slate-500 text-base leading-relaxed mb-6">{event.description}</p>
-                        <div className="flex flex-col gap-2 text-sm text-slate-400 font-bold uppercase tracking-wide">
-                          <span className="flex items-center gap-2">
-                            <IconClock size={16} className="text-slate-300" /> {event.date}
-                          </span>
+                      <CardContent className="px-6 pb-4 flex-grow">
+                        <div className="flex items-center gap-2 text-sm text-slate-400 font-bold uppercase tracking-wide">
+                          <IconClock size={16} className="text-slate-300" /> {video.date}
                         </div>
                       </CardContent>
-                      <CardFooter className="px-8 pb-8 pt-4 mt-auto">
-                        <Button className="w-full bg-[#0b2447] hover:bg-blue-600 text-white font-bold rounded-xl py-6 transition-colors">
-                          Register Now
+                      <CardFooter className="px-6 pb-6 pt-0 mt-auto">
+                        <Button asChild className="w-full bg-[#0b2447] hover:bg-blue-600 text-white font-bold rounded-xl py-6 transition-colors">
+                          <a href={video.link} target="_blank" rel="noopener noreferrer">Watch Now</a>
                         </Button>
                       </CardFooter>
                     </Card>
@@ -228,8 +247,8 @@ export default async function HomePage() {
             ) : (
               <FadeIn>
                 <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300 shadow-sm">
-                  <p className="text-slate-500 text-xl font-medium">No upcoming events right now.</p>
-                  <p className="text-slate-400 text-base mt-2">Follow us on Instagram to stay in the loop.</p>
+                  <p className="text-slate-500 text-xl font-medium">No latest videos right now.</p>
+                  <p className="text-slate-400 text-base mt-2">Subscribe to our YouTube to stay in the loop.</p>
                 </div>
               </FadeIn>
             )}
@@ -352,18 +371,14 @@ export default async function HomePage() {
             <FadeIn>
               <div className="bg-slate-50 rounded-[3rem] p-10 md:p-16 text-center border border-slate-100 shadow-sm">
                 <p className="text-slate-400 text-sm font-bold uppercase tracking-widest mb-10">By the numbers</p>
-                <div className="grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+                <div className="grid grid-cols-2 gap-8 max-w-2xl mx-auto">
                   <div>
-                    <p className="text-4xl md:text-6xl font-black text-slate-900">40<span className="text-blue-600">+</span></p>
+                    <p className="text-4xl md:text-6xl font-black text-slate-900">{membersCount}</p>
                     <p className="text-slate-500 text-sm font-medium mt-2">Members</p>
                   </div>
                   <div>
-                    <p className="text-4xl md:text-6xl font-black text-slate-900">2</p>
-                    <p className="text-slate-500 text-sm font-medium mt-2">Hackathons</p>
-                  </div>
-                  <div>
-                    <p className="text-4xl md:text-6xl font-black text-slate-900">1</p>
-                    <p className="text-slate-500 text-sm font-medium mt-2">Semester old</p>
+                    <p className="text-4xl md:text-6xl font-black text-slate-900">{totalEvents}</p>
+                    <p className="text-slate-500 text-sm font-medium mt-2">Events</p>
                   </div>
                 </div>
               </div>

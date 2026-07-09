@@ -17,7 +17,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   return (
     <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
-      <body>
+      <body className="overflow-x-hidden">
         <Header />
         <main>{children}</main>
         <Footer />
