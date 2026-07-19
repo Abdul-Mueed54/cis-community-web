@@ -69,6 +69,9 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    events: Event;
+    team: Team;
+    'member-registrations': MemberRegistration;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +81,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    team: TeamSelect<false> | TeamSelect<true>;
+    'member-registrations': MemberRegistrationsSelect<false> | MemberRegistrationsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -149,6 +155,8 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
+  _key?: string | null;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -160,6 +168,102 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  /**
+   * Used for the URL (e.g., annual-cis-hackathon-2026). Use lowercase and hyphens.
+   */
+  slug: string;
+  status: 'upcoming' | 'completed';
+  tag: 'Hackathon' | 'Workshop' | 'Seminar' | 'Meetup' | 'Competition';
+  date: string;
+  time: string;
+  venue: string;
+  /**
+   * Short summary for the main events listing card (1-2 sentences max).
+   */
+  description: string;
+  /**
+   * Detailed description of the event for the dedicated event page.
+   */
+  about?: string | null;
+  /**
+   * External link to Google Form, Typeform, etc.
+   */
+  registrationLink?: string | null;
+  /**
+   * Main promotional banner for the event.
+   */
+  featuredImage?: (number | null) | Media;
+  /**
+   * The story/recap of how the event went.
+   */
+  insights?: string | null;
+  /**
+   * Optional: Name of the winning team/individuals.
+   */
+  winners?: string | null;
+  /**
+   * YouTube link for the event recording.
+   */
+  videoLink?: string | null;
+  /**
+   * The massive hero image used for the recap section.
+   */
+  insightsImage?: (number | null) | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team".
+ */
+export interface Team {
+  id: number;
+  name: string;
+  /**
+   * Select the department for this team member
+   */
+  department: 'executive_board' | 'cooperation_marketing' | 'coding_innovation' | 'media' | 'publisher';
+  /**
+   * Determines card size and placement on the website.
+   */
+  roleTier: '1' | '2' | '3' | '4' | '5';
+  /**
+   * e.g., President, Tech Lead, Event Manager
+   */
+  role: string;
+  linkedin?: string | null;
+  github?: string | null;
+  photo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-registrations".
+ */
+export interface MemberRegistration {
+  id: number;
+  name: string;
+  email: string;
+  studentId: string;
+  department: string;
+  reason?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -192,6 +296,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'team';
+        value: number | Team;
+      } | null)
+    | ({
+        relationTo: 'member-registrations';
+        value: number | MemberRegistration;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -263,6 +379,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  _key?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -274,6 +392,63 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  tag?: T;
+  date?: T;
+  time?: T;
+  venue?: T;
+  description?: T;
+  about?: T;
+  registrationLink?: T;
+  featuredImage?: T;
+  insights?: T;
+  winners?: T;
+  videoLink?: T;
+  insightsImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team_select".
+ */
+export interface TeamSelect<T extends boolean = true> {
+  name?: T;
+  department?: T;
+  roleTier?: T;
+  role?: T;
+  linkedin?: T;
+  github?: T;
+  photo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "member-registrations_select".
+ */
+export interface MemberRegistrationsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  studentId?: T;
+  department?: T;
+  reason?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

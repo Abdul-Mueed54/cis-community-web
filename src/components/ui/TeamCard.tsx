@@ -49,7 +49,7 @@ export const MemberCard = ({ member, size = "sm" }: { member: any, size?: "lg" |
   };
 
   const cardBaseStyle =
-    "relative bg-white/40 backdrop-blur-xl backdrop-saturate-150 rounded-2xl flex flex-col items-center text-center " +
+    "relative bg-white/40 backdrop-blur-xl backdrop-saturate-150 rounded-lg flex flex-col items-center text-center " +
     "border border-white/60 shadow-[0_8px_32px_rgba(15,23,42,0.08)] hover:shadow-[0_8px_40px_rgba(15,23,42,0.14)] " +
     "hover:bg-white/55 transition-colors duration-300";
 

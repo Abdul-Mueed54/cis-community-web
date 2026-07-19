@@ -4,6 +4,16 @@ import { withPayload } from '@payloadcms/next/withPayload'
 const nextConfig = {
   // Your standard Next.js configuration options go here
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 }
 
 export default withPayload(nextConfig)
