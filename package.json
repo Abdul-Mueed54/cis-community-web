@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A blank template to get started with Payload 3.0",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --openssl-legacy-provider\" next build",
     "dev": "cross-env NODE_OPTIONS=\"--no-deprecation --openssl-legacy-provider\" next dev",
