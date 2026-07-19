@@ -1,6 +1,6 @@
 "use client";
 
-import { IconBrandLinkedin, IconMail } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandLinkedin, } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
 export const MemberCard = ({ member, size = "sm" }: { member: any, size?: "lg" | "md" | "wide" | "sm" }) => {
@@ -22,7 +22,9 @@ export const MemberCard = ({ member, size = "sm" }: { member: any, size?: "lg" |
     sm: "text-base font-bold text-slate-800"
   };
 
-  const photoUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b2447&color=fff&size=256`;
+  const photoUrl = typeof member.photo === 'object' && member.photo?.url
+    ? member.photo.url
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b2447&color=fff&size=256`;
   const isHead = member.roleTier === 3;
   const isCoHead = member.roleTier === 4;
   const showBadge = isHead || isCoHead;
@@ -105,11 +107,17 @@ export const MemberCard = ({ member, size = "sm" }: { member: any, size?: "lg" |
 
       {/* Social Links — glass chip instead of bare icons */}
       <div className="flex gap-2 mt-4" style={{ transform: "translateZ(20px)" }}>
-        <a href="#" className="w-8 h-8 flex items-center justify-center rounded-full bg-white/40 backdrop-blur-sm border border-white/50 text-slate-500 hover:text-blue-600 hover:bg-white/70 transition-colors">
+        <a href={member.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-white/40 backdrop-blur-sm border border-white/50 text-slate-500 hover:text-blue-600 hover:bg-white/70 transition-colors">
           <IconBrandLinkedin size={16} />
         </a>
-        <a href="#" className="w-8 h-8 flex items-center justify-center rounded-full bg-white/40 backdrop-blur-sm border border-white/50 text-slate-500 hover:text-blue-600 hover:bg-white/70 transition-colors">
-          <IconMail size={16} />
+        <a href={member.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-white/40 backdrop-blur-sm border border-white/50 text-slate-500 hover:text-blue-600 hover:bg-white/70 transition-colors">
+          <IconBrandGithub size={16} />
         </a>
       </div>
     </div>

@@ -30,6 +30,23 @@ export const Team: CollectionConfig = {
         description: 'Select the department for this team member',
       }
     },
+    // 🔥 NEW FIELD FOR HIERARCHY
+    {
+      name: 'roleTier',
+      type: 'select',
+      required: true,
+      defaultValue: '5',
+      options: [
+        { label: 'Tier 1 (President)', value: '1' },
+        { label: 'Tier 2 (Vice President / Director)', value: '2' },
+        { label: 'Tier 3 (Department Head)', value: '3' },
+        { label: 'Tier 4 (Department Co-Head)', value: '4' },
+        { label: 'Tier 5 (Regular Member)', value: '5' },
+      ],
+      admin: {
+        description: 'Determines card size and placement on the website.',
+      }
+    },
     {
       name: 'role',
       type: 'text',
@@ -42,17 +59,11 @@ export const Team: CollectionConfig = {
       name: 'linkedin',
       type: 'text',
       required: false,
-      admin: {
-        description: 'LinkedIn Profile URL',
-      }
     },
     {
       name: 'github',
       type: 'text',
       required: false,
-      admin: {
-        description: 'GitHub Profile URL',
-      }
     },
     {
       name: 'photo',
