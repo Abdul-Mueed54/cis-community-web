@@ -42,7 +42,6 @@ export default buildConfig({
   plugins: [
     uploadthingStorage({
       collections: {
-        // This targets your Media collection (assuming the slug is 'media')
         media: true,
       },
       options: {
