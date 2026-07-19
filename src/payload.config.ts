@@ -11,6 +11,7 @@ import { Media } from './collections/Media'
 import { Events } from './collections/Event'
 import { Team } from './collections/Team'
 import { MemberRegistrations } from './collections/MemberRegistration'
+import { About } from './globals/About'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -23,6 +24,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Events, Team, MemberRegistrations],
+  globals: [About],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
