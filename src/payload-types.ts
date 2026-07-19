@@ -93,8 +93,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    about: About;
+  };
+  globalsSelect: {
+    about: AboutSelect<false> | AboutSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -489,6 +493,78 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about".
+ */
+export interface About {
+  id: number;
+  hero: {
+    /**
+     * A short, punchy 1-2 sentence vision statement.
+     */
+    manifesto: string;
+    /**
+     * Keep it to two short paragraphs max. No bloat!
+     */
+    description: string;
+  };
+  focalPerson: {
+    name: string;
+    title: string;
+    image: number | Media;
+    /**
+     * A short quote about the vision or impact of the community.
+     */
+    quote: string;
+  };
+  founders?:
+    | {
+        name: string;
+        role: 'founder' | 'co_founder';
+        image: number | Media;
+        /**
+         * Optional LinkedIn URL
+         */
+        linkedin?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about_select".
+ */
+export interface AboutSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        manifesto?: T;
+        description?: T;
+      };
+  focalPerson?:
+    | T
+    | {
+        name?: T;
+        title?: T;
+        image?: T;
+        quote?: T;
+      };
+  founders?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        image?: T;
+        linkedin?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
