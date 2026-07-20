@@ -25,8 +25,9 @@ export const MemberCard = ({ member, size = "sm" }: { member: any, size?: "lg" |
   const photoUrl = typeof member.photo === 'object' && member.photo?.url
     ? member.photo.url
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b2447&color=fff&size=256`;
-  const isHead = member.roleTier === 3;
-  const isCoHead = member.roleTier === 4;
+  const roleString = (member.role || "").toLowerCase();
+  const isHead = member.role_tier === 3 || roleString === "head";
+  const isCoHead = member.roleTier === 4 || roleString === "co-head";
   const showBadge = isHead || isCoHead;
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -49,7 +50,7 @@ export const MemberCard = ({ member, size = "sm" }: { member: any, size?: "lg" |
   };
 
   const cardBaseStyle =
-    "relative bg-white/40 backdrop-blur-xl backdrop-saturate-150 rounded-lg flex flex-col items-center text-center " +
+    "relative bg-white/40 backdrop-blur-xl backdrop-saturate-150 rounded-2xl flex flex-col items-center text-center " +
     "border border-white/60 shadow-[0_8px_32px_rgba(15,23,42,0.08)] hover:shadow-[0_8px_40px_rgba(15,23,42,0.14)] " +
     "hover:bg-white/55 transition-colors duration-300";
 

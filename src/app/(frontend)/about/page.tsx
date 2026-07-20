@@ -108,7 +108,7 @@ export default async function AboutPage() {
 
               {/* Main Founders Feature (Now supports multiple!) */}
               {mainFounder.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-8 w-full">
+                <div className="flex flex-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-center gap-8 w-full">
                   {mainFounder.map((founder: any, idx: number) => (
                     <div key={`founder-${idx}`} className="w-full max-w-sm rounded-2xl p-6 shadow-[0_8px_32px_rgba(15,23,42,0.06)] border border-white/50 bg-white/40 backdrop-blur-xl group hover:-translate-y-1 transition-transform">
                       <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-5">
@@ -137,7 +137,7 @@ export default async function AboutPage() {
 
               {/* Co-Founders Grid */}
               {coFounders.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl mx-auto">
                   {coFounders.map((coFounder: any, idx: number) => (
                     <div key={`cofounder-${idx}`} className="rounded-2xl p-5 shadow-[0_8px_32px_rgba(15,23,42,0.04)] border border-white/50 bg-white/20 backdrop-blur-xl group hover:-translate-y-1 transition-transform">
                       <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden mb-4">

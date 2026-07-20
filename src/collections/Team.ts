@@ -30,7 +30,6 @@ export const Team: CollectionConfig = {
         description: 'Select the department for this team member',
       }
     },
-    // 🔥 NEW FIELD FOR HIERARCHY
     {
       name: 'roleTier',
       type: 'select',
