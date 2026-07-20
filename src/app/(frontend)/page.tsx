@@ -236,8 +236,8 @@ export default async function HomePage() {
                   {teamMembers.map((member: any, i: number) => (
                     <div key={i} className="relative w-14 h-14 rounded-full border-4 border-white shadow-sm overflow-hidden bg-slate-100 z-10 hover:z-20 hover:scale-110 transition-all">
                       <Image
-                        src={typeof member.photo === 'object' && member.photo?.url ? member.photo.url : '/placeholder-user.jpg'}
-                        alt={member.name || 'Team member'}
+                        src={typeof member.photo === 'object' && member.photo?.url ? member.photo.url : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0b2447&color=fff&size=256`}
+                        alt={ member.name|| 'Team member'}
                         fill
                         className="object-cover"
                       />
